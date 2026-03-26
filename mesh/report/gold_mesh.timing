@@ -1,0 +1,119 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'gold_mesh' contains 2 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : gold_mesh
+Version: K-2015.06-SP5-5
+Date   : Wed Mar 25 16:06:51 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+  Startpoint: router11/polarity_reg
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: router11/pe_oc/odd_buffer_reg[14]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  router11/polarity_reg/CLK (DFFPOSX1)                    0.00 #     0.00 r
+  router11/polarity_reg/Q (DFFPOSX1)                      0.06       0.06 r
+  router11/U6/Y (INVX1)                                   0.01       0.08 f
+  router11/U5/Y (INVX1)                                   0.05       0.13 r
+  router11/east_ic/polarity (input_ctrl_52)               0.00       0.13 r
+  router11/east_ic/U644/Y (INVX1)                         0.03       0.16 f
+  router11/east_ic/U639/Y (INVX1)                         0.01       0.17 r
+  router11/east_ic/U634/Y (INVX1)                         0.02       0.19 f
+  router11/east_ic/U624/Y (INVX1)                         0.07       0.26 r
+  router11/east_ic/U653/Y (AND2X1)                        0.04       0.30 r
+  router11/east_ic/U467/Y (AOI21X1)                       0.02       0.31 f
+  router11/east_ic/U652/Y (BUFX2)                         0.05       0.36 f
+  router11/east_ic/U642/Y (INVX1)                         0.07       0.43 r
+  router11/east_ic/U643/Y (OR2X1)                         0.06       0.49 r
+  router11/east_ic/U591/Y (OR2X1)                         0.05       0.54 r
+  router11/east_ic/U592/Y (INVX1)                         0.03       0.58 f
+  router11/east_ic/forward_PE (input_ctrl_52)             0.00       0.58 f
+  router11/pe_oc/forward_E (output_ctrl_50)               0.00       0.58 f
+  router11/pe_oc/U1151/Y (INVX1)                          0.03       0.60 r
+  router11/pe_oc/U1135/Y (AND2X1)                         0.07       0.67 r
+  router11/pe_oc/U1136/Y (INVX1)                          0.05       0.72 f
+  router11/pe_oc/U735/Y (AOI22X1)                         0.04       0.76 r
+  router11/pe_oc/U403/Y (BUFX2)                           0.04       0.80 r
+  router11/pe_oc/U734/Y (NAND3X1)                         0.01       0.81 f
+  router11/pe_oc/U1177/Y (INVX1)                          0.02       0.83 r
+  router11/pe_oc/U132/Y (AND2X1)                          0.03       0.85 r
+  router11/pe_oc/U133/Y (INVX1)                           0.02       0.87 f
+  router11/pe_oc/U715/Y (NAND3X1)                         0.03       0.91 r
+  router11/pe_oc/U622/Y (BUFX2)                           0.04       0.95 r
+  router11/pe_oc/U1158/Y (INVX1)                          0.03       0.97 f
+  router11/pe_oc/U625/Y (AND2X1)                          0.05       1.02 f
+  router11/pe_oc/U1164/Y (AND2X1)                         0.04       1.06 f
+  router11/pe_oc/U1167/Y (AND2X1)                         0.04       1.09 f
+  router11/pe_oc/U692/Y (NOR3X1)                          0.05       1.15 r
+  router11/pe_oc/U691/Y (NAND3X1)                         0.02       1.16 f
+  router11/pe_oc/U616/Y (BUFX2)                           0.04       1.20 f
+  router11/pe_oc/U4/Y (AND2X1)                            0.04       1.24 f
+  router11/pe_oc/U667/Y (INVX1)                           0.01       1.25 r
+  router11/pe_oc/U9/Y (AND2X1)                            0.45       1.71 r
+  router11/pe_oc/U1149/Y (INVX1)                          0.17       1.88 f
+  router11/pe_oc/U1138/Y (INVX1)                          0.67       2.56 r
+  router11/pe_oc/U197/Y (OAI21X1)                         0.16       2.72 f
+  router11/pe_oc/odd_buffer_reg[14]/D (DFFPOSX1)          0.00       2.72 f
+  data arrival time                                                  2.72
+
+  clock clk (rise edge)                                   4.00       4.00
+  clock network delay (ideal)                             0.00       4.00
+  router11/pe_oc/odd_buffer_reg[14]/CLK (DFFPOSX1)        0.00       4.00 r
+  library setup time                                     -0.10       3.90
+  data required time                                                 3.90
+  --------------------------------------------------------------------------
+  data required time                                                 3.90
+  data arrival time                                                 -2.72
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.18
+
+
+  Startpoint: router11/polarity_reg
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: node11_pedo[0]
+            (output port)
+  Path Group: default
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  router11/polarity_reg/CLK (DFFPOSX1)                    0.00 #     0.00 r
+  router11/polarity_reg/Q (DFFPOSX1)                      0.06       0.06 r
+  router11/U6/Y (INVX1)                                   0.01       0.08 f
+  router11/U5/Y (INVX1)                                   0.05       0.13 r
+  router11/pe_oc/polarity (output_ctrl_50)                0.00       0.13 r
+  router11/pe_oc/U1234/Y (INVX1)                          0.04       0.16 f
+  router11/pe_oc/U1147/Y (INVX1)                          0.77       0.93 r
+  router11/pe_oc/U865/Y (OAI21X1)                         0.18       1.11 f
+  router11/pe_oc/data_out[0] (output_ctrl_50)             0.00       1.11 f
+  router11/pedo[0] (gold_router_10)                       0.00       1.11 f
+  node11_pedo[0] (out)                                    0.00       1.11 f
+  data arrival time                                                  1.11
+
+  max_delay                                               5.00       5.00
+  output external delay                                   0.00       5.00
+  data required time                                                 5.00
+  --------------------------------------------------------------------------
+  data required time                                                 5.00
+  data arrival time                                                 -1.11
+  --------------------------------------------------------------------------
+  slack (MET)                                                        3.89
+
+
+1

@@ -1,0 +1,16 @@
+*.vcd
+*.fsdb
+*.log
+*.vpd
+simv
+simv.daidir/
+csrc/
+DVEfiles/
+*.key
+*.shm/
+*.trn
+*.dsn
+*/work/*
+!*/work/.gitkeep
+*/reports/*
+!*/reports/.gitkeep
