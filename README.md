@@ -32,3 +32,17 @@ The processor implements a 4-stage pipeline:
 - **Simulation:** Cadence NC-Sim
 - **Synthesis:** Synopsys Design Compiler with gscl45nm 45nm library
 - **DesignWare:** Used for SFU higher-level arithmetic operations
+
+## Work Division
+
+> **Note:** This split is tentative and may be adjusted as development progresses.
+
+| Module | Owner |
+|---|---|
+| ALU | Tak |
+| Instruction Decode / Control | Tak |
+| Pipeline integration & branch flushing | Tak |
+| Top-level `cardinal_processor.v` | Tak |
+| Register File | Alexandra |
+| SFU (DesignWare instantiation) | Alexandra |
+| Testbench & `.fill` files | Alexandra |
