@@ -1,92 +1,34 @@
-# EE577B Project Phase 1
-4x4 Cardinal Mesh Router
+# EE577B Project Phase 2 — Cardinal Processor
 
----
+**University of Southern California | EE577B Spring 2026 | Group 14**
 
-# Git Guide for Collaborators
+## Overview
 
----
+This repository contains the RTL design and verification of the 64-bit Cardinal Processor, implemented in Verilog as part of the EE577B project series. The processor executes the full Cardinal ISA with support for variable data widths (WW bits), and is designed to be fully synthesizable for later integration with the Cardinal Mesh Network from Phase 1.
 
-## Initial One Time Setup
+## Architecture
 
-1. Generate SSH Key (on Viterbi server)
-```
-ssh-keygen -t ed25519 -C "your_usc_email@usc.edu"
-```
-Press Enter for all prompts
+The processor implements a 4-stage pipeline:
 
-2. Print out key in terminal and add to GitHub
-```
-cat ~/.ssh/id_ed25519.pub
-```
-Copy the output → GitHub → Settings → SSH Keys → New SSH Key → Paste
+| Stage | Description |
+|---|---|
+| **IF** | Instruction Fetch — 32-bit PC increments by 4 each cycle |
+| **ID** | Instruction Decode & Register Fetch — branch resolution happens here |
+| **EX/MEM** | ALU/SFU Execution & Memory Access (combined due to immediate-only addressing) |
+| **WB** | Write Back to register file |
 
-3. Verify connection
-```
-ssh -T git@github.com
-```
-Should say: Hi username! You've successfully authenticated
+## Key Design Features
 
-4. Clone the Repo
-```
-cd ~/EE577B
-git clone git@github.com:takerunishimura/EE577B_Project_Phase_1.git
-cd EE577B_Project_Phase_1
-```
+- 32 × 64-bit general-purpose register file (2 async read ports, 1 sync write port)
+- R0 hardwired to zero and read-only
+- Synchronous active-high reset — all pipeline registers cleared at reset
+- Branch resolved in ID stage — taken branch flushes the IF stage (no delayed slots)
+- SFU instantiates Synopsys DesignWare components for division and square root
+- Variable data width support via WW bits per the Cardinal ISA
+- Simulation clock: 4ns (250 MHz)
 
----
+## Tools
 
-## Daily Workflow
-
-### Always pull first before starting work
-```
-git pull
-```
-
-### Check what files you've changed
-```
-git status
-```
-
-### Save and upload your work to GitHub
-```
-git add .
-git commit -m "your message here"
-git push
-```
-To stage a specific file instead: `git add router/design/gold_router.v`
-
----
-
-## Branching
-
-> A branch is your own personal copy of the project — changes you make won't affect your partner's work until you both agree to merge them together.
-
-### Create and switch to a new branch
-```
-git checkout -b branch_name
-```
-
-### Push your branch and changes to GitHub
-```
-git add .
-git commit -m "your message here"
-git push origin branch_name
-```
-
-### Switch to main branch
-```
-git checkout main
-```
-
-### Switch to your branch
-```
-git checkout branch_name
-```
-
-### Merge your branch into main (after work is done)
-1. Go to GitHub repo page after pushing your branch
-2. Click "Compare & pull request"
-3. Add a short description of what you did
-4. Click "Create pull request"
-5. Click "Merge pull request"
+- **Simulation:** Cadence NC-Sim
+- **Synthesis:** Synopsys Design Compiler with gscl45nm 45nm library
+- **DesignWare:** Used for SFU higher-level arithmetic operations
