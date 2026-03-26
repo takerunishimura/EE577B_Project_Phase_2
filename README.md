@@ -42,7 +42,7 @@ The processor implements a 4-stage pipeline:
 | ALU | Tak |
 | Instruction Decode / Control | Tak |
 | Pipeline integration & branch flushing | Tak |
-| Top-level `cardinal_processor.v` | Tak |
 | Register File | Alexandra |
 | SFU (DesignWare instantiation) | Alexandra |
+| Top-level `cardinal_processor.v` | Alexandra |
 | Testbench & `.fill` files | Alexandra |
