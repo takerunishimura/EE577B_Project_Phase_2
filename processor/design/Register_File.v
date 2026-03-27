@@ -1,0 +1,49 @@
+/// Reigister_File///
+
+module Register_File (
+    input              clk,
+    input              reset,
+
+    // Read port 1
+    input      [4:0]   rdAddr1,
+    output     [63:0]  rdData1,
+
+    // Read port 2
+    input      [4:0]   rdAddr2,
+    output     [63:0]  rdData2,
+
+    // Write port
+    input      [4:0]   wrAddr,
+    input      [63:0]  wrData,
+    input              wrEn
+);
+
+    reg [63:0] regfile [31:0];
+    integer i;
+
+    // -----------------------------
+    // Synchronous reset and write
+    // -----------------------------
+    always @(posedge clk) begin
+        if (reset) begin
+            for (i = 0; i < 32; i = i + 1) begin
+                regfile[i] <= 64'd0;
+            end
+        end else begin
+            // Register 0 is hard-wired to 0 and is read-only
+            if (wrEn && (wrAddr != 5'd0)) begin
+                regfile[wrAddr] <= wrData;
+            end
+
+            // Keep R0 at 0 explicitly
+            regfile[5'd0] <= 64'd0;
+        end
+    end
+
+    // -----------------------------
+    // Asynchronous read ports
+    // -----------------------------
+    assign rdData1 = (rdAddr1 == 5'd0) ? 64'd0 : regfile[rdAddr1];
+    assign rdData2 = (rdAddr2 == 5'd0) ? 64'd0 : regfile[rdAddr2];
+
+endmodule
