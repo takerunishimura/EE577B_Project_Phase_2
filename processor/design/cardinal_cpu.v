@@ -3,28 +3,28 @@ module cardinal_cpu (
     inst_in, d_in, pc_out, addr_out, memEn, memWrEn, d_out
 );
 
-input clk, reset;
-input [0:63] d_in;
-input [0:31] inst_in;
+input       clk, reset;
+input       [0:63] d_in;
+input       [0:31] inst_in;
 
-output [0:63] d_out;
-output reg [0:31] pc_out;
-output [0:31] addr_out;
-output memEn, memWrEn;
+output      [0:63] d_out;
+output reg  [0:31] pc_out;
+output      [0:31] addr_out;
+output      memEn, memWrEn;
 
 //wire [0:63] rD_Data; //FROM REG FILE, THIS IS TEMPORARY WIRE DECLARATION
 
-wire branch_taken;
+wire        branch_taken;
 
 // FROM INSTR_DECODE
-wire [0:5] opcode, func, alu_op;
-wire [0:4] rD_addr, rA_addr, rB_addr;
-wire [0:1] ww;
-wire [0:15] imm_addr;
-wire SFU, reg_wr_en, branch_ez, branch_nez, nop;
+wire        [0:5] opcode, func, alu_op;
+wire        [0:4] rD_addr, rA_addr, rB_addr;
+wire        [0:1] ww;
+wire        [0:15] imm_addr;
+wire        SFU, reg_wr_en, branch_ez, branch_nez, nop;
 
 //IF/ID PIPELINE REGISTER
-reg [0:31] IF_ID_reg;
+reg         [0:31] IF_ID_reg;
 
 //ID/EX PIPELINE REGISTER
 

@@ -8,32 +8,32 @@ module instr_decode (
     nop
 );
 //instruction
-input [0:31] inst_in; //big endian
+input       [0:31] inst_in; //big endian
 
 //instruction fields
-output [0:5] opcode; //R-type = 101010, VLD = 100000, VSD = 100001, VBEZ = 100010, VBNEZ = 100011, VNOP = 111100
-output [0:4] rD, rA, rB;
-output [0:1] ww; // ww: 00=8b, 01=16b, 10=32b, 11=64b
-output [0:5] func; // which R-type instruction
-output [0:15] imm_addr;
+output      [0:5] opcode; //R-type = 101010, VLD = 100000, VSD = 100001, VBEZ = 100010, VBNEZ = 100011, VNOP = 111100
+output      [0:4] rD, rA, rB;
+output      [0:1] ww; // ww: 00=8b, 01=16b, 10=32b, 11=64b
+output      [0:5] func; // which R-type instruction
+output      [0:15] imm_addr;
 
 //ALU control
-output [0:5] alu_op; //which R-type instr
-output reg SFU; //if SFU=1 use sfu, if SFU=0 use ALU
+output      [0:5] alu_op; //which R-type instr
+output reg  SFU; //if SFU=1 use sfu, if SFU=0 use ALU
 
 //Mem control
-output reg memEn; //for load
-output reg memWrEn; //for store
+output reg  memEn; //for load
+output reg  memWrEn; //for store
 
 //Register file control
-output reg reg_wr_en; //reg write enable
+output reg  reg_wr_en; //reg write enable
 
 //Branch control
-output reg branch_ez; //if content of rD is zero, execute branch
-output reg branch_nez; //if content of rD is not zero, execute branch
+output reg  branch_ez; //if content of rD is zero, execute branch
+output reg  branch_nez; //if content of rD is not zero, execute branch
 
 //no op
-output reg nop; //VOP=1
+output reg  nop; //VOP=1
 
 assign opcode   = inst_in[0:5];
 assign rD       = inst_in[6:10];
@@ -49,7 +49,7 @@ localparam VLD    = 6'b100000;
 localparam VSD    = 6'b100001;
 localparam VBEZ   = 6'b100010;
 localparam VBNEZ  = 6'b100011;
-localparam VNOP    = 6'b111100;
+localparam VNOP   = 6'b111100;
 
 localparam VAND   = 6'b000001;
 localparam VOR    = 6'b000010;

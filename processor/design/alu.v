@@ -1,26 +1,26 @@
 module alu (operandA, operandB, alu_op, ww, computed_results);
 
-input [0:63] operandA, operandB;
-input [0:5] alu_op;
-input [0:1] ww; // ww: 00=8b, 01=16b, 10=32b, 11=64b
-output reg [0:63] computed_results;
+input       [0:63] operandA, operandB;
+input       [0:5] alu_op;
+input       [0:1] ww; // ww: 00=8b, 01=16b, 10=32b, 11=64b
+output reg  [0:63] computed_results;
 
-localparam VAND   = 6'b000001;
-localparam VOR    = 6'b000010;
-localparam VXOR   = 6'b000011;
-localparam VNOT   = 6'b000100;
-localparam VMOV   = 6'b000101;
-localparam VADD   = 6'b000110;
-localparam VSUB   = 6'b000111;
-localparam VMULEU = 6'b001000;
-localparam VMULOU = 6'b001001;
-localparam VSLL   = 6'b001010;
-localparam VSRL   = 6'b001011;
-localparam VSRA   = 6'b001100;
-localparam VRTTH  = 6'b001101;
+localparam  VAND   = 6'b000001;
+localparam  VOR    = 6'b000010;
+localparam  VXOR   = 6'b000011;
+localparam  VNOT   = 6'b000100;
+localparam  VMOV   = 6'b000101;
+localparam  VADD   = 6'b000110;
+localparam  VSUB   = 6'b000111;
+localparam  VMULEU = 6'b001000;
+localparam  VMULOU = 6'b001001;
+localparam  VSLL   = 6'b001010;
+localparam  VSRL   = 6'b001011;
+localparam  VSRA   = 6'b001100;
+localparam  VRTTH  = 6'b001101;
 
-integer i; //used in for loop
-integer s; //used in shift operation
+integer     i; //used in for loop
+integer     s; //used in shift operation
 
 always @(*) begin
     i = 0;
