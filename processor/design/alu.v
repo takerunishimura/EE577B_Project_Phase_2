@@ -247,7 +247,7 @@ always @(*) begin
         endcase
         end
 
-    //SHIFT RIGHT ARITHMATIC
+    //SHIFT RIGHT ARITHMATIC, implies signed operation
     VSRA : begin 
         case (ww)
         2'b00 : begin
