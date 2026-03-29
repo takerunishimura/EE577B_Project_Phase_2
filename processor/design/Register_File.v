@@ -5,20 +5,20 @@ module Register_File (
     input              reset,
 
     // Read port 1
-    input      [4:0]   rdAddr1,
-    output     [63:0]  rdData1,
+    input      [0:4]   rdAddr1,
+    output     [0:63]  rdData1,
 
     // Read port 2
-    input      [4:0]   rdAddr2,
-    output     [63:0]  rdData2,
+    input      [0:4]   rdAddr2,
+    output     [0:63]  rdData2,
 
     // Write port
-    input      [4:0]   wrAddr,
-    input      [63:0]  wrData,
+    input      [0:4]   wrAddr,
+    input      [0:63]  wrData,
     input              wrEn
 );
 
-    reg [63:0] regfile [31:0];
+    reg [0:63] regfile [0:31];
     integer i;
 
     // -----------------------------

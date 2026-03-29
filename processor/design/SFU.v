@@ -2,11 +2,11 @@
 
 
 module SFU (
-    input  [63:0] rA,
-    input  [63:0] rB,
-    input  [1:0]  ww,
-    input  [2:0]  sfu_op,
-    output reg [63:0] result
+    input  [0:63] rA,
+    input  [0:63] rB,
+    input  [0:1]  ww,
+    input  [0:2]  sfu_op,
+    output reg [0:63] result
 );
 
     // ------------------------------------------------------------
@@ -22,173 +22,173 @@ module SFU (
     // ------------------------------------------------------------
     // 8-bit lane results (WW = 00)
     // ------------------------------------------------------------
-    wire [63:0] div8_result;
-    wire [63:0] mod8_result;
-    wire [63:0] sqrt8_result;
+    wire [0:63] div8_result;
+    wire [0:63] mod8_result;
+    wire [0:63] sqrt8_result;
 
     genvar i8;
     generate
         for (i8 = 0; i8 < 8; i8 = i8 + 1) begin : G_WW8
-            wire [7:0] div_q;
-            wire [7:0] mod_r;
-            wire [7:0] sqrt_q;
+            wire [0:7] div_q;
+            wire [0:7] mod_r;
+            wire [0:7] sqrt_q;
 
-            sfu_divu_lane  #(8) U_DIV8  (
-                .a (rA[63 - (i8*8) -: 8]),
-                .b (rB[63 - (i8*8) -: 8]),
-                .q (div_q)
+            sfu_divu_lane #(8) U_DIV8 (
+                .a(rA[(i8*8) +: 8]),
+                .b(rB[(i8*8) +: 8]),
+                .q(div_q)
             );
 
-            sfu_modu_lane  #(8) U_MOD8  (
-                .a (rA[63 - (i8*8) -: 8]),
-                .b (rB[63 - (i8*8) -: 8]),
-                .r (mod_r)
+            sfu_modu_lane #(8) U_MOD8 (
+                .a(rA[(i8*8) +: 8]),
+                .b(rB[(i8*8) +: 8]),
+                .r(mod_r)
             );
 
             sfu_sqrtu_lane #(8) U_SQRT8 (
-                .a (rA[63 - (i8*8) -: 8]),
-                .q (sqrt_q)
+                .a(rA[(i8*8) +: 8]),
+                .q(sqrt_q)
             );
 
-            assign div8_result [63 - (i8*8) -: 8] = div_q;
-            assign mod8_result [63 - (i8*8) -: 8] = mod_r;
-            assign sqrt8_result[63 - (i8*8) -: 8] = sqrt_q;
+            assign div8_result [(i8*8) +: 8] = div_q;
+            assign mod8_result [(i8*8) +: 8] = mod_r;
+            assign sqrt8_result[(i8*8) +: 8] = sqrt_q;
         end
     endgenerate
 
-    wire [15:0] sqeu8_p0, sqeu8_p1, sqeu8_p2, sqeu8_p3;
-    wire [15:0] sqou8_p0, sqou8_p1, sqou8_p2, sqou8_p3;
+    wire [0:15] sqeu8_p0, sqeu8_p1, sqeu8_p2, sqeu8_p3;
+    wire [0:15] sqou8_p0, sqou8_p1, sqou8_p2, sqou8_p3;
 
-    sfu_square_lane #(8) U_SQEU8_0 (.a(rA[63:56]), .p(sqeu8_p0)); // even byte 0
-    sfu_square_lane #(8) U_SQEU8_1 (.a(rA[47:40]), .p(sqeu8_p1)); // even byte 2
-    sfu_square_lane #(8) U_SQEU8_2 (.a(rA[31:24]), .p(sqeu8_p2)); // even byte 4
-    sfu_square_lane #(8) U_SQEU8_3 (.a(rA[15:8 ]), .p(sqeu8_p3)); // even byte 6
+    sfu_square_lane #(8) U_SQEU8_0 (.a(rA[0  +: 8]), .p(sqeu8_p0)); // even byte 0
+    sfu_square_lane #(8) U_SQEU8_1 (.a(rA[16 +: 8]), .p(sqeu8_p1)); // even byte 2
+    sfu_square_lane #(8) U_SQEU8_2 (.a(rA[32 +: 8]), .p(sqeu8_p2)); // even byte 4
+    sfu_square_lane #(8) U_SQEU8_3 (.a(rA[48 +: 8]), .p(sqeu8_p3)); // even byte 6
 
-    sfu_square_lane #(8) U_SQOU8_0 (.a(rA[55:48]), .p(sqou8_p0)); // odd byte 1
-    sfu_square_lane #(8) U_SQOU8_1 (.a(rA[39:32]), .p(sqou8_p1)); // odd byte 3
-    sfu_square_lane #(8) U_SQOU8_2 (.a(rA[23:16]), .p(sqou8_p2)); // odd byte 5
-    sfu_square_lane #(8) U_SQOU8_3 (.a(rA[7 :0 ]), .p(sqou8_p3)); // odd byte 7
+    sfu_square_lane #(8) U_SQOU8_0 (.a(rA[8  +: 8]), .p(sqou8_p0)); // odd byte 1
+    sfu_square_lane #(8) U_SQOU8_1 (.a(rA[24 +: 8]), .p(sqou8_p1)); // odd byte 3
+    sfu_square_lane #(8) U_SQOU8_2 (.a(rA[40 +: 8]), .p(sqou8_p2)); // odd byte 5
+    sfu_square_lane #(8) U_SQOU8_3 (.a(rA[56 +: 8]), .p(sqou8_p3)); // odd byte 7
 
-    wire [63:0] sqeu8_result = {sqeu8_p0, sqeu8_p1, sqeu8_p2, sqeu8_p3};
-    wire [63:0] sqou8_result = {sqou8_p0, sqou8_p1, sqou8_p2, sqou8_p3};
+    wire [0:63] sqeu8_result = {sqeu8_p0, sqeu8_p1, sqeu8_p2, sqeu8_p3};
+    wire [0:63] sqou8_result = {sqou8_p0, sqou8_p1, sqou8_p2, sqou8_p3};
 
     // ------------------------------------------------------------
     // 16-bit lane results (WW = 01)
     // ------------------------------------------------------------
-    wire [63:0] div16_result;
-    wire [63:0] mod16_result;
-    wire [63:0] sqrt16_result;
+    wire [0:63] div16_result;
+    wire [0:63] mod16_result;
+    wire [0:63] sqrt16_result;
 
     genvar i16;
     generate
         for (i16 = 0; i16 < 4; i16 = i16 + 1) begin : G_WW16
-            wire [15:0] div_q;
-            wire [15:0] mod_r;
-            wire [15:0] sqrt_q;
+            wire [0:15] div_q;
+            wire [0:15] mod_r;
+            wire [0:15] sqrt_q;
 
-            sfu_divu_lane  #(16) U_DIV16  (
-                .a (rA[63 - (i16*16) -: 16]),
-                .b (rB[63 - (i16*16) -: 16]),
-                .q (div_q)
+            sfu_divu_lane #(16) U_DIV16 (
+                .a(rA[(i16*16) +: 16]),
+                .b(rB[(i16*16) +: 16]),
+                .q(div_q)
             );
 
-            sfu_modu_lane  #(16) U_MOD16  (
-                .a (rA[63 - (i16*16) -: 16]),
-                .b (rB[63 - (i16*16) -: 16]),
-                .r (mod_r)
+            sfu_modu_lane #(16) U_MOD16 (
+                .a(rA[(i16*16) +: 16]),
+                .b(rB[(i16*16) +: 16]),
+                .r(mod_r)
             );
 
             sfu_sqrtu_lane #(16) U_SQRT16 (
-                .a (rA[63 - (i16*16) -: 16]),
-                .q (sqrt_q)
+                .a(rA[(i16*16) +: 16]),
+                .q(sqrt_q)
             );
 
-            assign div16_result [63 - (i16*16) -: 16] = div_q;
-            assign mod16_result [63 - (i16*16) -: 16] = mod_r;
-            assign sqrt16_result[63 - (i16*16) -: 16] = sqrt_q;
+            assign div16_result [(i16*16) +: 16] = div_q;
+            assign mod16_result [(i16*16) +: 16] = mod_r;
+            assign sqrt16_result[(i16*16) +: 16] = sqrt_q;
         end
     endgenerate
 
-    wire [31:0] sqeu16_p0, sqeu16_p1;
-    wire [31:0] sqou16_p0, sqou16_p1;
+    wire [0:31] sqeu16_p0, sqeu16_p1;
+    wire [0:31] sqou16_p0, sqou16_p1;
 
-    sfu_square_lane #(16) U_SQEU16_0 (.a(rA[63:48]), .p(sqeu16_p0)); // even half 0
-    sfu_square_lane #(16) U_SQEU16_1 (.a(rA[31:16]), .p(sqeu16_p1)); // even half 2
+    sfu_square_lane #(16) U_SQEU16_0 (.a(rA[0  +: 16]), .p(sqeu16_p0)); // even half 0
+    sfu_square_lane #(16) U_SQEU16_1 (.a(rA[32 +: 16]), .p(sqeu16_p1)); // even half 2
 
-    sfu_square_lane #(16) U_SQOU16_0 (.a(rA[47:32]), .p(sqou16_p0)); // odd half 1
-    sfu_square_lane #(16) U_SQOU16_1 (.a(rA[15:0 ]), .p(sqou16_p1)); // odd half 3
+    sfu_square_lane #(16) U_SQOU16_0 (.a(rA[16 +: 16]), .p(sqou16_p0)); // odd half 1
+    sfu_square_lane #(16) U_SQOU16_1 (.a(rA[48 +: 16]), .p(sqou16_p1)); // odd half 3
 
-    wire [63:0] sqeu16_result = {sqeu16_p0, sqeu16_p1};
-    wire [63:0] sqou16_result = {sqou16_p0, sqou16_p1};
+    wire [0:63] sqeu16_result = {sqeu16_p0, sqeu16_p1};
+    wire [0:63] sqou16_result = {sqou16_p0, sqou16_p1};
 
     // ------------------------------------------------------------
     // 32-bit lane results (WW = 10)
     // ------------------------------------------------------------
-    wire [63:0] div32_result;
-    wire [63:0] mod32_result;
-    wire [63:0] sqrt32_result;
+    wire [0:63] div32_result;
+    wire [0:63] mod32_result;
+    wire [0:63] sqrt32_result;
 
     genvar i32;
     generate
         for (i32 = 0; i32 < 2; i32 = i32 + 1) begin : G_WW32
-            wire [31:0] div_q;
-            wire [31:0] mod_r;
-            wire [31:0] sqrt_q;
+            wire [0:31] div_q;
+            wire [0:31] mod_r;
+            wire [0:31] sqrt_q;
 
-            sfu_divu_lane  #(32) U_DIV32  (
-                .a (rA[63 - (i32*32) -: 32]),
-                .b (rB[63 - (i32*32) -: 32]),
-                .q (div_q)
+            sfu_divu_lane #(32) U_DIV32 (
+                .a(rA[(i32*32) +: 32]),
+                .b(rB[(i32*32) +: 32]),
+                .q(div_q)
             );
 
-            sfu_modu_lane  #(32) U_MOD32  (
-                .a (rA[63 - (i32*32) -: 32]),
-                .b (rB[63 - (i32*32) -: 32]),
-                .r (mod_r)
+            sfu_modu_lane #(32) U_MOD32 (
+                .a(rA[(i32*32) +: 32]),
+                .b(rB[(i32*32) +: 32]),
+                .r(mod_r)
             );
 
             sfu_sqrtu_lane #(32) U_SQRT32 (
-                .a (rA[63 - (i32*32) -: 32]),
-                .q (sqrt_q)
+                .a(rA[(i32*32) +: 32]),
+                .q(sqrt_q)
             );
 
-            assign div32_result [63 - (i32*32) -: 32] = div_q;
-            assign mod32_result [63 - (i32*32) -: 32] = mod_r;
-            assign sqrt32_result[63 - (i32*32) -: 32] = sqrt_q;
+            assign div32_result [(i32*32) +: 32] = div_q;
+            assign mod32_result [(i32*32) +: 32] = mod_r;
+            assign sqrt32_result[(i32*32) +: 32] = sqrt_q;
         end
     endgenerate
 
-    wire [63:0] sqeu32_p0;
-    wire [63:0] sqou32_p0;
+    wire [0:63] sqeu32_p0;
+    wire [0:63] sqou32_p0;
 
-    sfu_square_lane #(32) U_SQEU32_0 (.a(rA[63:32]), .p(sqeu32_p0)); // even word 0
-    sfu_square_lane #(32) U_SQOU32_0 (.a(rA[31:0 ]), .p(sqou32_p0)); // odd  word 1
+    sfu_square_lane #(32) U_SQEU32_0 (.a(rA[0  +: 32]), .p(sqeu32_p0)); // even word 0
+    sfu_square_lane #(32) U_SQOU32_0 (.a(rA[32 +: 32]), .p(sqou32_p0)); // odd  word 1
 
-    wire [63:0] sqeu32_result = sqeu32_p0;
-    wire [63:0] sqou32_result = sqou32_p0;
+    wire [0:63] sqeu32_result = sqeu32_p0;
+    wire [0:63] sqou32_result = sqou32_p0;
 
     // ------------------------------------------------------------
     // 64-bit lane results (WW = 11)
     // ------------------------------------------------------------
-    wire [63:0] div64_result;
-    wire [63:0] mod64_result;
-    wire [63:0] sqrt64_result;
+    wire [0:63] div64_result;
+    wire [0:63] mod64_result;
+    wire [0:63] sqrt64_result;
 
-    sfu_divu_lane  #(64) U_DIV64  (
-        .a (rA),
-        .b (rB),
-        .q (div64_result)
+    sfu_divu_lane #(64) U_DIV64 (
+        .a(rA),
+        .b(rB),
+        .q(div64_result)
     );
 
-    sfu_modu_lane  #(64) U_MOD64  (
-        .a (rA),
-        .b (rB),
-        .r (mod64_result)
+    sfu_modu_lane #(64) U_MOD64 (
+        .a(rA),
+        .b(rB),
+        .r(mod64_result)
     );
 
     sfu_sqrtu_lane #(64) U_SQRT64 (
-        .a (rA),
-        .q (sqrt64_result)
+        .a(rA),
+        .q(sqrt64_result)
     );
 
     // ------------------------------------------------------------
@@ -233,7 +233,7 @@ module SFU (
                     2'b00: result = sqeu8_result;
                     2'b01: result = sqeu16_result;
                     2'b10: result = sqeu32_result;
-                    2'b11: result = 64'd0; // ISA does not support 64-bit square result
+                    2'b11: result = 64'd0;
                     default: result = 64'd0;
                 endcase
             end
@@ -243,7 +243,7 @@ module SFU (
                     2'b00: result = sqou8_result;
                     2'b01: result = sqou16_result;
                     2'b10: result = sqou32_result;
-                    2'b11: result = 64'd0; // ISA does not support 64-bit square result
+                    2'b11: result = 64'd0;
                     default: result = 64'd0;
                 endcase
             end
@@ -260,18 +260,24 @@ endmodule
 // ================================================================
 // Unsigned divide lane: q = a / b
 // If b == 0, output 0
+// Big-endian port style
 // ================================================================
 module sfu_divu_lane #(parameter W = 8) (
-    input  [W-1:0] a,
-    input  [W-1:0] b,
-    output [W-1:0] q
+    input  [0:W-1] a,
+    input  [0:W-1] b,
+    output [0:W-1] q
 );
+    wire [W-1:0] a_dw;
+    wire [W-1:0] b_dw;
     wire [W-1:0] quot_int;
     wire [W-1:0] rem_unused;
 
+    assign a_dw = a;
+    assign b_dw = b;
+
     DW_div #(W, W) U_DW_DIV (
-        .a    (a),
-        .b    (b),
+        .a    (a_dw),
+        .b    (b_dw),
         .quot (quot_int),
         .rem  (rem_unused)
     );
@@ -283,18 +289,24 @@ endmodule
 // ================================================================
 // Unsigned modulo lane: r = a % b
 // If b == 0, output 0
+// Big-endian port style
 // ================================================================
 module sfu_modu_lane #(parameter W = 8) (
-    input  [W-1:0] a,
-    input  [W-1:0] b,
-    output [W-1:0] r
+    input  [0:W-1] a,
+    input  [0:W-1] b,
+    output [0:W-1] r
 );
+    wire [W-1:0] a_dw;
+    wire [W-1:0] b_dw;
     wire [W-1:0] quot_unused;
     wire [W-1:0] rem_int;
 
+    assign a_dw = a;
+    assign b_dw = b;
+
     DW_div #(W, W) U_DW_MOD (
-        .a    (a),
-        .b    (b),
+        .a    (a_dw),
+        .b    (b_dw),
         .quot (quot_unused),
         .rem  (rem_int)
     );
@@ -306,17 +318,21 @@ endmodule
 // ================================================================
 // Unsigned sqrt lane: q = floor(sqrt(a))
 // DW_sqrt output is ceil(W/2) bits, then zero-extended back to W
+// Big-endian port style
 // ================================================================
 module sfu_sqrtu_lane #(parameter W = 8) (
-    input  [W-1:0] a,
-    output [W-1:0] q
+    input  [0:W-1] a,
+    output [0:W-1] q
 );
     localparam RW = (W + 1) / 2;
 
+    wire [W-1:0] a_dw;
     wire [RW-1:0] root_int;
 
+    assign a_dw = a;
+
     DW_sqrt #(W) U_DW_SQRT (
-        .a    (a),
+        .a    (a_dw),
         .root (root_int)
     );
 
@@ -327,10 +343,16 @@ endmodule
 // ================================================================
 // Unsigned square lane: p = a * a
 // Output width = 2W
+// Big-endian port style
 // ================================================================
 module sfu_square_lane #(parameter W = 8) (
-    input  [W-1:0]     a,
-    output [(2*W)-1:0] p
+    input  [0:W-1] a,
+    output [0:(2*W)-1] p
 );
-    assign p = a * a;
+    wire [W-1:0] a_mul;
+    wire [(2*W)-1:0] p_mul;
+
+    assign a_mul = a;
+    assign p_mul = a_mul * a_mul;
+    assign p = p_mul;
 endmodule
