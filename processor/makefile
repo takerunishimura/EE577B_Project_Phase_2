@@ -41,9 +41,9 @@
 
 
 # top level module
-TOP = tb_gold_mesh
+TOP = tb_CARDINAL_CPU
 TOP_SYN = tb_syn
-DESIGN_NAME = gold_mesh
+DESIGN_NAME = cardinal_cpu
 
 # List of the design files
 DESIGN_FILES = ./design/*.v ../router/design/*.v
