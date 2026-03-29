@@ -51,25 +51,6 @@ localparam VBEZ   = 6'b100010;
 localparam VBNEZ  = 6'b100011;
 localparam VNOP   = 6'b111100;
 
-localparam VAND   = 6'b000001;
-localparam VOR    = 6'b000010;
-localparam VXOR   = 6'b000011;
-localparam VNOT   = 6'b000100;
-localparam VMOV   = 6'b000101;
-localparam VADD   = 6'b000110;
-localparam VSUB   = 6'b000111;
-localparam VMULEU = 6'b001000;
-localparam VMULOU = 6'b001001;
-localparam VSLL   = 6'b001010;
-localparam VSRL   = 6'b001011;
-localparam VSRA   = 6'b001100;
-localparam VRTTH  = 6'b001101;
-localparam VDIV   = 6'b001110;
-localparam VMOD   = 6'b001111;
-localparam VSQEU  = 6'b010000;
-localparam VSQOU  = 6'b010001;
-localparam VSQRT  = 6'b010010;
-
 always @(*) begin
     SFU = 0;
     memEn = 0;
