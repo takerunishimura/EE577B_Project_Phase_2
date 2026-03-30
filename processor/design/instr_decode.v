@@ -51,6 +51,12 @@ localparam VBEZ   = 6'b100010;
 localparam VBNEZ  = 6'b100011;
 localparam VNOP   = 6'b111100;
 
+localparam VDIV  = 6'b001110;
+localparam VMOD  = 6'b001111;
+localparam VSQEU = 6'b010000;
+localparam VSQOU = 6'b010001;
+localparam VSQRT = 6'b010010;
+
 always @(*) begin
     SFU = 0;
     memEn = 0;
@@ -64,6 +70,7 @@ always @(*) begin
     R_TYPE : SFU = (func == VDIV || func == VMOD || func == VSQEU || func == VSQOU || func == VSQRT);
     VLD : memEn = 1;
     VSD : begin
+        memEn   = 1; // FIX: assert memEn for VSD too
         memWrEn = 1;
         reg_wr_en = 0;
     end

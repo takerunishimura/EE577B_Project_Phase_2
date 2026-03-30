@@ -20,7 +20,53 @@ wire        [0:15] IDout_imm_addr;
 wire        IDout_memEn, IDout_memWrEn, IDout_SFU, IDout_reg_wr_en, IDout_branch_ez, IDout_branch_nez, IDout_nop;
 
 wire        branch_taken;
-assign branch_taken = (IDout_branch_ez && (reg_rB_out == 64'b0)) || (IDout_branch_nez && (reg_rB_out != 64'b0)); 
+
+
+//REG FILE WIRES
+wire        [0:4] rdAddr1_mux;
+wire        [0:4] rdAddr2_mux;
+wire        [0:63] reg_rA_out, reg_rB_out;
+
+//ALU WIRES
+wire [0:63] alu_results;
+
+//SFU WIRES
+wire [0:63] sfu_results;
+
+//alu or sfu results depending on SFU flag
+wire [0:63] ex_results;
+
+//WRITEBACK WIRE
+wire [0:63] wb_data;
+
+//======================
+//PIPELINE REGISTERS
+//======================
+
+//IF/ID PIPELINE REGISTER
+reg         [0:31] IF_ID_reg;
+
+//ID/EX PIPELINE REGISTER
+reg [0:63] ID_EX_rA;
+reg [0:63] ID_EX_rB;
+reg [0:5]  ID_EX_alu_op;    // ALU operation
+reg [0:1]  ID_EX_ww;        // word width
+reg        ID_EX_SFU;       // SFU select
+reg        ID_EX_reg_wr_en; // register write enable
+reg [0:4]  ID_EX_rD_addr;   // destination register address for writeback
+reg        ID_EX_memEn;     // memory read enable (VLD)
+reg        ID_EX_memWrEn;   // memory write enable (VSD)
+reg [0:15] ID_EX_imm_addr;  // immediate address for VLD/VSD
+reg        ID_EX_nop;       // no operation
+
+//EX/WB PIPELINE REGISTER
+reg [0:63] EX_WB_result;
+reg [0:4]  EX_WB_rD_addr;   // so writeback knows which register to write to
+reg        EX_WB_reg_wr_en; // so writeback knows whether to write
+reg        EX_WB_memEn;     // for VLD - need to write d_in to register
+
+assign branch_taken = (IDout_branch_ez && (reg_rB_out == 64'b0)) || 
+                      (IDout_branch_nez && (reg_rB_out != 64'b0)); 
 
 //======================
 //4 STAGE PIPELINE
@@ -37,8 +83,6 @@ always @(posedge clk) begin
 end
 
 //IF/ID PIPELINE REGISTER
-reg         [0:31] IF_ID_reg;
-
 always @(posedge clk) begin
     if (reset) 
         IF_ID_reg <= 32'b0;
@@ -71,10 +115,6 @@ instr_decode ID (
 );
 
 //REG FILE INSTANTIATION 
-wire        [0:4] rdAddr1_mux;
-wire        [0:4] rdAddr2_mux;
-wire        [0:63] reg_rA_out, reg_rB_out;
-
 assign rdAddr1_mux = IDout_memWrEn ? IDout_rD_addr : IDout_rA_addr;
 assign rdAddr2_mux = (IDout_branch_ez || IDout_branch_nez) ? IDout_rD_addr : IDout_rB_addr;
 
@@ -93,18 +133,6 @@ reg_file REG_FILE (
 );
 
 //ID/EX PIPELINE REGISTER
-reg [0:63] ID_EX_rA;
-reg [0:63] ID_EX_rB;
-reg [0:5]  ID_EX_alu_op;    // ALU operation
-reg [0:1]  ID_EX_ww;        // word width
-reg        ID_EX_SFU;       // SFU select
-reg        ID_EX_reg_wr_en; // register write enable
-reg [0:4]  ID_EX_rD_addr;   // destination register address for writeback
-reg        ID_EX_memEn;     // memory read enable (VLD)
-reg        ID_EX_memWrEn;   // memory write enable (VSD)
-reg [0:15] ID_EX_imm_addr;  // immediate address for VLD/VSD
-reg        ID_EX_nop;       // no operation
-
 always @(posedge clk) begin
     if (reset) begin
         ID_EX_rA        <= 64'b0;
@@ -153,7 +181,6 @@ assign memWrEn = ID_EX_memWrEn;
 assign addr_out = {16'b0, ID_EX_imm_addr};
 
 //ALU INSTANTIATION
-wire [0:63] alu_results; 
 alu u_alu (
     //input
     .operandA(ID_EX_rA), 
@@ -165,7 +192,6 @@ alu u_alu (
 );
 
 //SFU INSTANTIATION HERE
-wire [0:63] sfu_results;
 sfu u_sfu (
     //input
     .rA(ID_EX_rA),
@@ -179,15 +205,9 @@ sfu u_sfu (
 assign d_out = ID_EX_rA; // for VSD, ID_EX_rA holds rD contents
 
 //Based on ID_EX_SFU value, select sfu results or alu results
-wire [0:63] ex_results;
 assign ex_results = ID_EX_SFU ? sfu_results : alu_results;
 
 //EX/WB PIPELINE REGISTER
-reg [0:63] EX_WB_result;
-reg [0:4]  EX_WB_rD_addr;   // so writeback knows which register to write to
-reg        EX_WB_reg_wr_en; // so writeback knows whether to write
-reg        EX_WB_memEn;     // for VLD - need to write d_in to register
-
 always @(posedge clk) begin
     if (reset) begin
         EX_WB_result     <= 64'b0;
@@ -210,7 +230,6 @@ always @(posedge clk) begin
 end
 
 //WRITEBACK
-wire [0:63] wb_data;
 assign wb_data = EX_WB_memEn ? d_in : EX_WB_result;
 
 endmodule

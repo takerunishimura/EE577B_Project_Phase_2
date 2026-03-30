@@ -24,6 +24,10 @@ integer cycle_number;
 integer i;
 integer dmem_dump_file_1, dmem_dump_file_2, dmem_dump_file_3;
 
+// FIX: Added program_started flag to prevent false termination at time 0
+// when inst_in is 00000000 before any instructions have been fetched
+reg program_started;
+
 cardinal_cpu dut (clk, reset, inst_in, d_in, pc_out, addr_out, memEn, memWrEn, d_out);
 
 imem Ins_Cache (
@@ -42,15 +46,27 @@ dmem DM_Cache (
 
 always #2 clk = ~clk;
 
+// FIX: Track when a non-zero instruction has been fetched
+// This prevents the wait condition from firing before the program starts
+always @(posedge clk) begin
+	if (reset)
+		program_started <= 1'b0;
+	else if (inst_in != 32'h00000000)
+		program_started <= 1'b1;
+end
+
 initial	
 	begin
+		program_started = 0; // FIX: initialize program_started
+
 		//Testing the imem_1 instructions which are already provided
 		$readmemh("./testcase/imem_1.fill", Ins_Cache.MEM); 	// loading instruction memory into node0
 		$readmemh("./testcase/dmem.fill", DM_Cache.MEM); 	// loading data memory into dmem		
 		clk = 0;
 		reset = 1;
 		#(4*clock_period); reset = 0;
-		wait (inst_in == 32'h00000000);
+		// FIX: wait for program to start before checking for termination
+		wait (program_started && inst_in == 32'h00000000);
 		$display("The program completed in %d cycles", cycle_number);
 		// Let us now flush the pipe line
 		repeat(5) @(negedge clk);
@@ -68,8 +84,10 @@ initial
 		$readmemh("./testcase/imem_2.fill", Ins_Cache.MEM); 	// loading instruction memory into node0
 		$readmemh("./testcase/dmem.fill", DM_Cache.MEM); 	// loading data memory into dmem		
 		reset = 1;
+		program_started = 0; // FIX: reset program_started for next test
 		#(4*clock_period); reset = 0;
-		wait (inst_in == 32'h00000000);
+		// FIX: wait for program to start before checking for termination
+		wait (program_started && inst_in == 32'h00000000);
 		$display("The program completed in %d cycles", cycle_number);
 		// Let us now flush the pipe line
 		repeat(5) @(negedge clk);
@@ -87,8 +105,10 @@ initial
 		$readmemh("./testcase/imem_3.fill", Ins_Cache.MEM); 	// loading instruction memory into node0
 		$readmemh("./testcase/dmem.fill", DM_Cache.MEM); 	// loading data memory into dmem		
 		reset = 1;
+		program_started = 0; // FIX: reset program_started for next test
 		#(4*clock_period); reset = 0;
-		wait (inst_in == 32'h00000000);
+		// FIX: wait for program to start before checking for termination
+		wait (program_started && inst_in == 32'h00000000);
 		$display("The program completed in %d cycles", cycle_number);
 		// Let us now flush the pipe line
 		repeat(5) @(negedge clk);

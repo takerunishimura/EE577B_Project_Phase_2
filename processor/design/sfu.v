@@ -273,8 +273,9 @@ module sfu_divu_lane #(parameter W = 8) (
     DW_div #(W, W) U_DW_DIV (
         .a    (a),
         .b    (b),
-        .quot (quot_int),
-        .rem  (rem_unused)
+        .quotient (quot_int),
+        .remainder  (rem_unused),
+        .divide_by_0()
     );
 
     assign q = (b == {W{1'b0}}) ? {W{1'b0}} : quot_int;
@@ -296,8 +297,9 @@ module sfu_modu_lane #(parameter W = 8) (
     DW_div #(W, W) U_DW_MOD (
         .a    (a),
         .b    (b),
-        .quot (quot_unused),
-        .rem  (rem_int)
+        .quotient (quot_unused),
+        .remainder  (rem_int),
+        .divide_by_0()
     );
 
     assign r = (b == {W{1'b0}}) ? {W{1'b0}} : rem_int;

@@ -46,7 +46,10 @@ TOP_SYN = tb_syn
 DESIGN_NAME = cardinal_cpu
 
 # List of the design files
-DESIGN_FILES = ./design/*.v ../router/design/*.v
+# CPU design selection: cardinal_cpu.v or cardinal_cpu_fwd.v
+CPU = cardinal_cpu_fwd
+DW_PATH = /usr/local/synopsys/Design_Compiler/K-2015.06-SP5-5/dw/sim_ver
+DESIGN_FILES = ./design/alu.v ./design/instr_decode.v ./design/reg_file.v ./design/sfu.v ./design/$(CPU).v ../router/design/*.v $(DW_PATH)/DW_div.v $(DW_PATH)/DW_sqrt.v
 NETLIST_FILES = ./netlist/*.v
 
 # List of the testbench files
@@ -68,10 +71,11 @@ SIM_SYN_SCRIPT_FILE_NO_GUI = ./scripts/runscript_syn_nogui.tcl
 
 # ncvlog switch 
 NCVLOG_SWITCHES = \
-	-STATUS \
-	-MESSAGES \
-	-UPDATE \
-	-INCDIR $(INCLUDE_DIRECTORY)
+    -STATUS \
+    -MESSAGES \
+    -UPDATE \
+    -INCDIR $(INCLUDE_DIRECTORY) \
+    -INCDIR /usr/local/synopsys/Design_Compiler/K-2015.06-SP5-5/dw/sim_ver 
 
 #ncelab switches
 NCELAB_SWITCHES = \
@@ -82,7 +86,7 @@ NCELAB_SWITCHES = \
 	-UPDATE \
 	-MESSAGES \
 	-TIMESCALE '1ns/10ps' \
-	-LIBVERBOSE
+	-LIBVERBOSE 
 
 # ncsim simulation switches for console simulation
 NCSIM_SWITCHES_NO_GUI = \
@@ -209,4 +213,3 @@ hdl.var :
 init : dir cds.lib hdl.var
 	@touch AUTHORS
 	@echo 'Initialized the directory for simulation'
-
