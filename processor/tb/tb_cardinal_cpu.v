@@ -101,6 +101,11 @@ initial
 		$fclose (dmem_dump_file_2);
 		#(5*clock_period);	
 
+		reset = 1;
+		program_started = 0; // reset for next test
+		#(4*clock_period); reset = 0;
+		wait (program_started && inst_in == 32'h00000000);
+
 		//Testing Branch related instructions
 		$readmemh("./testcase/imem_3.fill", Ins_Cache.MEM); 	// loading instruction memory into node0
 		$readmemh("./testcase/dmem.fill", DM_Cache.MEM); 	// loading data memory into dmem		
@@ -134,6 +139,12 @@ begin
 		cycle_number <= 0;
 	else
 		cycle_number <= cycle_number + 1;
+end
+
+initial begin
+    #100000;
+    $display("GLOBAL TIMEOUT");
+    $finish;
 end
 
 endmodule

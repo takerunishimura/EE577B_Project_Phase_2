@@ -77,7 +77,7 @@ always @(posedge clk) begin
     if (reset)
         pc_out <= 32'b0;
     else if (branch_taken)
-        pc_out <= {16'b0, IDout_imm_addr}; //imm_addr FROM INSTR_DECODE
+        pc_out <= {14'b0, IDout_imm_addr, 2'b00}; //imm_addr FROM INSTR_DECODE
     else 
         pc_out <= pc_out + 32'd4;
 end
@@ -215,12 +215,12 @@ always @(posedge clk) begin
         EX_WB_reg_wr_en  <= 1'b0;
         EX_WB_memEn      <= 1'b0;
     end
-    else if (branch_taken) begin
+    /*else if (branch_taken) begin
         EX_WB_result     <= 64'b0;
         EX_WB_rD_addr    <= 5'b0;
         EX_WB_reg_wr_en  <= 1'b0;
         EX_WB_memEn      <= 1'b0;
-    end
+    end*/
     else begin
         EX_WB_result     <= ex_results;
         EX_WB_rD_addr    <= ID_EX_rD_addr;
