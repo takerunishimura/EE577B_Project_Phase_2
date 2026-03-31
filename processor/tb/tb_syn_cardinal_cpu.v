@@ -1,13 +1,14 @@
+`include "./include/gscl45nm.v"
 `timescale 1ns/10ps
 
 `define CYCLE_TIME 4
 
 // Include Files
 // Memory Files
-`include "./include/dmem.v"
-`include "./include/imem.v"
+//`include "./include/dmem.v"
+//`include "./include/imem.v"
 
-module tb_cardinal_cpu;
+module tb_syn_cardinal_cpu;
 
 reg clk, reset;
 wire [0:31] inst_in;	// Instruction data
@@ -141,6 +142,12 @@ initial begin
     $display("GLOBAL TIMEOUT");
     $finish;
 end
+
+initial begin
+		$sdf_annotate("./netlist/tb_cardinal_cpu_syn.sdf", dut,,"sdf.log","MAXIMUM","1.0:1.0:1.0", "FROM_MAXIMUM");	//http://www.pldworld.com/_hdl/2/_ref/se_html/manual_html/c_sdf10.html
+		$enable_warnings;
+		$log("ncsim.log");
+	end
 
 endmodule
  `undef CYCLE_TIME

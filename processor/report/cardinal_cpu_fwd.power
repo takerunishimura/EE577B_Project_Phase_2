@@ -1,0 +1,49 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : cardinal_cpu
+Version: K-2015.06-SP5-5
+Date   : Mon Mar 30 18:13:28 2026
+****************************************
+
+
+Library(s) Used:
+
+    gscl45nm (File: /home/scf-22/ee577/NCSU45PDK/FreePDK45/osu_soc/lib/files/gscl45nm.db)
+
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 1.1  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =  11.1111 mW   (80%)
+  Net Switching Power  =   2.7804 mW   (20%)
+                         ---------
+Total Dynamic Power    =  13.8915 mW  (100%)
+
+Cell Leakage Power     = 534.5693 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           8.0646        1.5191e-02        1.2535e+05            8.2051  (  56.88%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational      3.0466            2.7652        4.0922e+05            6.2210  (  43.12%)
+--------------------------------------------------------------------------------------------------
+Total             11.1111 mW         2.7804 mW     5.3457e+05 nW        14.4261 mW
+1

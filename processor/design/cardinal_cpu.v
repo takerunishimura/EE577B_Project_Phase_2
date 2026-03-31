@@ -1,3 +1,4 @@
+//CARDINAL CPU WITHOUT FORWARDING
 module cardinal_cpu (
     clk, reset,
     inst_in, d_in, pc_out, addr_out, memEn, memWrEn, d_out

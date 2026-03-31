@@ -42,7 +42,7 @@
 
 # top level module
 TOP = tb_cardinal_cpu
-TOP_SYN = tb_syn
+TOP_SYN = tb_syn_cardinal_cpu
 DESIGN_NAME = cardinal_cpu
 
 # List of the design files
