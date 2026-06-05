@@ -47,4 +47,3 @@ The processor implements a 4-stage pipeline:
 | Top-level `cardinal_processor.v` | Alexandra |
 | Testbench & `.fill` files | Alexandra |
 
-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
